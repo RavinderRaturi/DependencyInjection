@@ -42,14 +42,23 @@ namespace DI.Tutorial
 
                     switch (choice)
                     {
-                        case  "1":
+                        case "1":
                             #region Stage 1
                             Stage1.Commerce commerce1 = new Stage1.Commerce();
                             commerce1.ProcessingOrder(orderInfo);
                             #endregion
                             break;
                         case "2":
-                            //do something
+                            #region Stage 2
+                            Stage2.Commerce commerce2 =
+                                new Stage2.Commerce(
+                                    new Stage2.BillingProcessor(),
+                                    new Stage2.CustomerProcessor(
+                                        new Stage2.CustomerRepository(),
+                                        new Stage2.ProductRepository()),
+                                    new Stage2.Notifier());
+                            commerce2.ProcessingOrder(orderInfo);
+                            #endregion
                             break;
                         case "3":
                             //do something

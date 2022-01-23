@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DI.Tutorial
 {
-    class OrderInfo
+    public class OrderInfo
     {
         public string CustomerName { get; set; }
         public string Email { get; set; }
