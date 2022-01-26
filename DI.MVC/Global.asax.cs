@@ -1,6 +1,9 @@
-﻿using System;
+﻿using Autofac;
+using Autofac.Integration.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Optimization;
@@ -16,6 +19,17 @@ namespace DI.MVC
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+
+            ContainerBuilder builder = new ContainerBuilder();
+
+            builder.RegisterType<CustomerRepository>().As<ICustomerRepository>();
+            builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
+                .Where(t => t.Name.EndsWith("Controller"));
+
+            IContainer container = builder.Build();
+
+            DependencyResolver.SetResolver(new AutofacDependencyResolver(container));
         }
     }
 }

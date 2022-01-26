@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Autofac;
+using System;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Reflection;
 
 namespace DI.Tutorial
 {
     class Program
     {
+        public static IContainer Container;
         static void Main(string[] args)
         {
             bool exit = false;
@@ -61,10 +61,32 @@ namespace DI.Tutorial
                             #endregion
                             break;
                         case "3":
-                            //do something
+
+                            #region State3
+
+                            ContainerBuilder builder = new ContainerBuilder();
+
+                            builder.RegisterType<Stage3.Commerce>();
+                            builder.RegisterType<Stage3.Notifier>().As<Stage3.INotifier>();
+
+                            builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
+                                .Where(t => t.Name.EndsWith("Processor") && t.Namespace.EndsWith("Stage3"))
+                                .As(t => t.GetInterfaces().FirstOrDefault(
+                                    i => i.Name == "I" + t.Name));
+
+                            builder.RegisterType<Stage3.Logger>().As<Stage3.ILogger>();
+
+                            Container = builder.Build();
+
+                            Stage3.Commerce commerce3 = Container.Resolve<Stage3.Commerce>();
+                            commerce3.ProcessingOrder(orderInfo);
+                            #endregion
                             break;
                     }
-
+                    Console.WriteLine();
+                    Console.WriteLine("Press 'Enter' for menu.");
+                    Console.ReadLine();
+                    Console.Clear();
                 }
             }
         }
