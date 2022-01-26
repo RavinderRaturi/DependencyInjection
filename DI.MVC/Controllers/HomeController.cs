@@ -15,7 +15,8 @@ namespace DI.MVC.Controllers
         ICustomerRepository _CustomerRepository;
         public ActionResult Index()
         {
-            return View();
+            IEnumerable<Customer> customers = _CustomerRepository.GetAll();
+            return View(customers);
         }
 
         public ActionResult About()
