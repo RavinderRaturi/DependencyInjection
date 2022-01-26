@@ -69,10 +69,31 @@ namespace DI.Tutorial
                             builder.RegisterType<Stage3.Commerce>();
                             builder.RegisterType<Stage3.Notifier>().As<Stage3.INotifier>();
 
+                            #region Regiter and Resolve if there is no standard naming convention. 
+                         
+                            //builder.RegisterType<Stage3.BillingProcessor>().As<Stage3.IBillingProcessor>();
+                            //builder.RegisterType<Stage3.CustomerProcessor>().As<Stage3.ICustomerProcessor>();
+                            //builder.RegisterType<Stage3.CustomerRepository>().As<Stage3.ICustomerRepository>();
+                            //builder.RegisterType<Stage3.ProductRepository>().As<Stage3.IProductRepository>();
+                       
+                            
+                            #endregion
+
+
+
+                            #region Regiter and Resolve if there is proper naming convention.
                             builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
                                 .Where(t => t.Name.EndsWith("Processor") && t.Namespace.EndsWith("Stage3"))
                                 .As(t => t.GetInterfaces().FirstOrDefault(
                                     i => i.Name == "I" + t.Name));
+
+                            builder.RegisterAssemblyTypes(Assembly.GetExecutingAssembly())
+                                .Where(t => t.Name.EndsWith("Repository") && t.Namespace.EndsWith("Stage3"))
+                                .As(t => t.GetInterfaces().FirstOrDefault(
+                                    i => i.Name == "I" + t.Name));
+                            #endregion
+
+
 
                             builder.RegisterType<Stage3.Logger>().As<Stage3.ILogger>();
 
